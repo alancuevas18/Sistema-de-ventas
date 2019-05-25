@@ -8,7 +8,7 @@
     <meta name="description" content="Sistema Ventas- EmacSoft">
     <meta name="author" content="EmacSoft.com">
     <meta name="keyword" content="Sistema ventas, Sistema compras">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="img/nuve.ico">
     <title>Sistema Ventas - EmacSoft</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Icons -->
@@ -19,8 +19,8 @@
     <div id="app">
     <header class="app-header navbar">
         <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+            <span class="navbar-toggler-icon"></span>
+          </button>
         <a class="navbar-brand" href="#"></a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
           <span class="navbar-toggler-icon"></span>
@@ -78,7 +78,7 @@
     </div>   
     </div>
     <footer class="app-footer">
-        <span><a href="http://www.EmacSoft.com/">EmacSoft</a> &copy; 2017</span>
+        <span><a href="http://www.EmacSoft.com/">EmacSoft</a> &copy; 2019</span>
         <span class="ml-auto">Desarrollado por <a href="http://www.EmacSoft.com/">EmacSoft</a></span>
     </footer>
     

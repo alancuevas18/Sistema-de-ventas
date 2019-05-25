@@ -33267,23 +33267,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
-        listarCategoria: function listarCategoria(page) {
+        listarCategoria: function listarCategoria(page, buscar, criterio) {
             var me = this;
-            var url = '/categoria?page=' + page;
+            var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayCategoria = respuesta.categorias.data;
                 me.pagination = respuesta.pagination;
+                this.buscar = '';
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        cambiarPagina: function cambiarPagina(page) {
+        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
             //Actualiza la página actual
             me.pagination.current_page = page;
             //Envia la petición para visualizar la data de esa página
-            me.listarCategoria(page);
+            me.listarCategoria(page, buscar, criterio);
         },
         registrarCategoria: function registrarCategoria() {
             if (this.validarCategoria()) {
@@ -33297,7 +33298,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'descripcion': this.descripcion
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarCategoria();
+                me.listarCategoria(1, '', 'nombre');
             }).catch(function (error) {
                 console.log(error);
             });
@@ -33315,7 +33316,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'id': this.categoria_id
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarCategoria();
+                me.listarCategoria(1, '', 'nombre');
             }).catch(function (error) {
                 console.log(error);
             });
@@ -33323,7 +33324,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         desactivarCategoria: function desactivarCategoria(id) {
             var _this = this;
 
-            swal({
+            swal.fire({
                 title: 'Esta seguro de desactivar esta categoría?',
                 type: 'warning',
                 showCancelButton: true,
@@ -33342,7 +33343,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     axios.put('/categoria/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria();
+                        me.listarCategoria(1, '', 'nombre');
                         swal('Desactivado!', 'El registro ha sido desactivado con éxito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
@@ -33355,7 +33356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         activarCategoria: function activarCategoria(id) {
             var _this2 = this;
 
-            swal({
+            swal.fire({
                 title: 'Esta seguro de activar esta categoría?',
                 type: 'warning',
                 showCancelButton: true,
@@ -33374,7 +33375,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     axios.put('/categoria/activar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria();
+                        me.listarCategoria(1, '', 'nombre');
                         swal('Activado!', 'El registro ha sido activado con éxito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
@@ -33410,7 +33411,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             case 'registrar':
                                 {
                                     this.modal = 1;
-                                    this.tituloModal = 'Agregar Categoría';
+                                    this.tituloModal = 'Registrar Categoría';
                                     this.nombre = '';
                                     this.descripcion = '';
                                     this.tipoAccion = 1;
@@ -33420,7 +33421,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                 {
                                     //console.log(data);
                                     this.modal = 1;
-                                    this.tituloModal = 'Editar categoría';
+                                    this.tituloModal = 'Actualizar categoría';
                                     this.tipoAccion = 2;
                                     this.categoria_id = data['id'];
                                     this.nombre = data['nombre'];
@@ -33433,7 +33434,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.listarCategoria();
+        this.listarCategoria(1, this.buscar, this.criterio);
     }
 });
 
@@ -33527,6 +33528,15 @@ var render = function() {
                   attrs: { type: "text", placeholder: "Texto a buscar" },
                   domProps: { value: _vm.buscar },
                   on: {
+                    keyup: function($event) {
+                      if (
+                        !("button" in $event) &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key)
+                      ) {
+                        return null
+                      }
+                      _vm.listarCategoria(1, _vm.buscar, _vm.criterio)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -33536,7 +33546,35 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm._m(1)
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        _vm.listarCategoria(1, _vm.buscar, _vm.criterio)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
+                ),
+                _vm._v(
+                  "\n                             \n                            "
+                ),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        _vm.listarCategoria(1, "", "")
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "icon-list" }), _vm._v(" Todos")]
+                )
               ])
             ])
           ]),
@@ -33545,7 +33583,7 @@ var render = function() {
             "table",
             { staticClass: "table table-bordered table-striped table-sm" },
             [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -33649,7 +33687,11 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.cambiarPagina(_vm.pagination.current_page - 1)
+                              _vm.cambiarPagina(
+                                _vm.pagination.current_page - 1,
+                                _vm.buscar,
+                                _vm.criterio
+                              )
                             }
                           }
                         },
@@ -33674,7 +33716,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            _vm.cambiarPagina(page)
+                            _vm.cambiarPagina(page, _vm.buscar, _vm.criterio)
                           }
                         }
                       })
@@ -33692,7 +33734,11 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.cambiarPagina(_vm.pagination.current_page + 1)
+                              _vm.cambiarPagina(
+                                _vm.pagination.current_page + 1,
+                                _vm.buscar,
+                                _vm.criterio
+                              )
                             }
                           }
                         },
@@ -33933,24 +33979,10 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("ol", { staticClass: "breadcrumb" }, [
-      _c("li", { staticClass: "breadcrumb-item" }, [_vm._v("Home")]),
-      _vm._v(" "),
       _c("li", { staticClass: "breadcrumb-item" }, [
-        _c("a", { attrs: { href: "#" } }, [_vm._v("Admin")])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "breadcrumb-item active" }, [_vm._v("Dashboard")])
+        _c("a", { attrs: { href: "/" } }, [_vm._v("Escritorio")])
+      ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-      [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
-    )
   },
   function() {
     var _vm = this
